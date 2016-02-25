@@ -1,0 +1,21 @@
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Essai DHTML</title>
+<style type="text/css">
+
+</style>
+
+<script type="text/javascript">
+    function surface(rayon) {
+        return (rayon * rayon)*3.14;
+    }
+
+    function valider() {
+        alert(surface(document.getElementById("r").value))
+    }
+</script>
+
+<html>
+    <input type = "text" id="r">
+    <input type="button" value = "valider" onclick="valider()">
+</html>

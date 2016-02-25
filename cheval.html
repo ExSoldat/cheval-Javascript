@@ -1,0 +1,67 @@
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Cheval</title>
+<style type="text/css">
+
+table {
+    border-collapse:collapse;
+}
+
+td {
+    border:1px solid black;
+    min-width:60px;
+    height:60px;
+}
+</style>
+
+<script type="text/javascript">
+
+    var positionCheval = "0 0";
+
+    function checkMovement(idcaseAller) {
+        var xa = idcaseAller.split(" ")[0];
+        var ya = idcaseAller.split(" ")[1];
+
+        var xc = positionCheval.split(" ")[0];
+        var yc = positionCheval.split(" ")[1];
+        //todo : remplacer les strings par des integer
+        if(Math.abs(xc-xa)<=2 && Math.abs(yc-ya)<=2) {
+            alert("check");
+            if(Math.abs(xc-xa) + Math.abs(yc-ya) == 3) {
+                    alert("check");
+
+                positionCheval = idcaseAller;
+                alert(idcaseAller);
+                document.getElementById(positionCheval).style.backgroundColor = "red";
+            }
+        }
+    }
+
+    function init(){
+        var table = document.createElement("table");
+        for (var i = 0; i < 8; i++) {
+            var ligne = document.createElement("tr");
+            for(var j = 0; j< 8; j++) {
+                var colonne = document.createElement("td");
+                colonne.setAttribute("id", i+' '+j);
+                colonne.onclick = function() {checkMovement(colonne.getAttribute("id"));};
+                ligne.appendChild(colonne);
+            }
+            table.appendChild(ligne);
+        }
+        document.body.appendChild(table);
+        document.getElementById(positionCheval).style.backgroundColor = "red";
+
+    }
+</script>
+
+<body onLoad="init()">
+</body>
+
+</html>
+
+
+<!-- if abs(x courant - ancien x)<=2 && abs( y courant - ancien y)<=2{
+    bon
+    if (abs(xc -ax) + abs(yc - ay)) == 3 { bon }
+} -->

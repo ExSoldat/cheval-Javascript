@@ -1,0 +1,8 @@
+--1
+
+alert() : affiche un message avec un bouton "ok" afin d'informer l'utilisateur
+
+confirm() : affiche un message de validation à l'utilisateur, il pourra alors valider ou annuler un choix précédent
+
+prompt() : affiche un mini formulaire pour l'utilisateur avec un texte à remplir et un valider ou anuler sa réponse
+
