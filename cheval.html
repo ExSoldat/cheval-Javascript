@@ -1,67 +1,134 @@
-
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf8">
 <title>Cheval</title>
 <style type="text/css">
-
 table {
     border-collapse:collapse;
 }
-
 td {
     border:1px solid black;
     min-width:60px;
     height:60px;
 }
+
+#journal {
+    height: 200px;
+}
+
+#coords {
+    border:1px dotted black;
+    overflow-y: scroll;
+    width:48%;
+    height: 100%;
+    float:left;
+}
+
+#nbCasesParcourues {
+    width:48%;
+    height: 100%;
+    float:right;
+    line-height: 200px;
+    vertical-align: middle;
+    text-align: center;
+    border:1px dotted black;
+
+
+    font-size: 10pc;
+}
+
+#container {
+    width : 505px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
 </style>
 
 <script type="text/javascript">
-
     var positionCheval = "0 0";
-
     function checkMovement(idcaseAller) {
-        var xa = idcaseAller.split(" ")[0];
-        var ya = idcaseAller.split(" ")[1];
-
-        var xc = positionCheval.split(" ")[0];
-        var yc = positionCheval.split(" ")[1];
+        var xa = parseInt(idcaseAller.split(" ")[0]);
+        var ya = parseInt(idcaseAller.split(" ")[1]);
+        var xc = parseInt(positionCheval.split(" ")[0]);
+        var yc = parseInt(positionCheval.split(" ")[1]);
         //todo : remplacer les strings par des integer
         if(Math.abs(xc-xa)<=2 && Math.abs(yc-ya)<=2) {
-            alert("check");
             if(Math.abs(xc-xa) + Math.abs(yc-ya) == 3) {
-                    alert("check");
-
+                document.getElementById(positionCheval).style.backgroundColor = "#FAA";
                 positionCheval = idcaseAller;
-                alert(idcaseAller);
-                document.getElementById(positionCheval).style.backgroundColor = "red";
+                document.getElementById(positionCheval).style.backgroundColor = "#F00";
+                majJournal();
             }
         }
     }
 
     function init(){
         var table = document.createElement("table");
-        for (var i = 0; i < 8; i++) {
+        //Création d'un header
+        var r = document.createElement("tr");
+        for(var z = 0; z<8; z++) {
+            var h = document.createElement("th");
+            h.innerHTML = String.fromCharCode(65+z);
+            r.appendChild(h);
+        }
+        table.appendChild(r);
+
+        for (var j = 0; j < 8; j++) {
             var ligne = document.createElement("tr");
-            for(var j = 0; j< 8; j++) {
+            for(var i = 0; i< 8; i++) {
                 var colonne = document.createElement("td");
                 colonne.setAttribute("id", i+' '+j);
-                colonne.onclick = function() {checkMovement(colonne.getAttribute("id"));};
+                colonne.onclick = function() {checkMovement(this.getAttribute("id"));};
                 ligne.appendChild(colonne);
             }
+            var h2 = document.createElement("th");
+            h2.innerHTML = j+1;
+            ligne.appendChild(h2)
             table.appendChild(ligne);
         }
-        document.body.appendChild(table);
+        var echiquier = document.getElementById("echiquier");
+        echiquier.appendChild(table);
         document.getElementById(positionCheval).style.backgroundColor = "red";
-
     }
+
+    function majJournalCoords() {
+        document.getElementById("coords").innerHTML += "Coordonées du cheval : " + miseEnFormePosition() + "<br/>";
+    }
+
+    function miseEnFormePosition() {
+        var x = parseInt(positionCheval.split(" ")[0]);
+        var y = parseInt(positionCheval.split(" ")[1])+1;
+        convertX = String.fromCharCode(65+x);
+
+        return convertX + ' ' + y;
+    }
+
+    function majJournalNbCases() {
+        var nbc = parseInt(document.getElementById("nbCasesParcourues").innerHTML);
+        document.getElementById("nbCasesParcourues").innerHTML = nbc+1;
+    }
+
+    function majJournal() {
+        majJournalCoords();
+        majJournalNbCases();
+    }
+
 </script>
 
 <body onLoad="init()">
 </body>
+    <div id="container">
+        <div id="echiquier">
+        </div>
+        <div id="journal">
+            <div id="coords">
+                Coordonées du cheval : A 1 <br/>
+            </div>
+            <div id="nbCasesParcourues">
+                0
+            </div>
+            <p style="float:left; font-weight : bold;">Coordonnées successives du cheval</p>
+            <p style="float:right; font-weight : bold;">Nombre de cases parcourues</p>
+        </div>
+    </div>
 
 </html>
-
-
-<!-- if abs(x courant - ancien x)<=2 && abs( y courant - ancien y)<=2{
-    bon
-    if (abs(xc -ax) + abs(yc - ay)) == 3 { bon }
-} -->
