@@ -9,11 +9,9 @@ td {
     min-width:60px;
     height:60px;
 }
-
 #journal {
     height: 200px;
 }
-
 #coords {
     border:1px dotted black;
     overflow-y: scroll;
@@ -21,7 +19,6 @@ td {
     height: 100%;
     float:left;
 }
-
 #nbCasesParcourues {
     width:48%;
     height: 100%;
@@ -30,36 +27,26 @@ td {
     vertical-align: middle;
     text-align: center;
     border:1px dotted black;
-
-
     font-size: 10pc;
 }
-
 #container {
     width : 505px;
     margin-right: auto;
     margin-left: auto;
 }
 
+#back {
+    position: relative;
+    left: 550px;
+    top: 59px;
+}
+
 </style>
 
 <script type="text/javascript">
+
     var positionCheval = "0 0";
-    function checkMovement(idcaseAller) {
-        var xa = parseInt(idcaseAller.split(" ")[0]);
-        var ya = parseInt(idcaseAller.split(" ")[1]);
-        var xc = parseInt(positionCheval.split(" ")[0]);
-        var yc = parseInt(positionCheval.split(" ")[1]);
-        //todo : remplacer les strings par des integer
-        if(Math.abs(xc-xa)<=2 && Math.abs(yc-ya)<=2) {
-            if(Math.abs(xc-xa) + Math.abs(yc-ya) == 3) {
-                document.getElementById(positionCheval).style.backgroundColor = "#FAA";
-                positionCheval = idcaseAller;
-                document.getElementById(positionCheval).style.backgroundColor = "#F00";
-                majJournal();
-            }
-        }
-    }
+    var listePositions = [];
 
     function init(){
         var table = document.createElement("table");
@@ -71,14 +58,16 @@ td {
             r.appendChild(h);
         }
         table.appendChild(r);
-
         for (var j = 0; j < 8; j++) {
             var ligne = document.createElement("tr");
             for(var i = 0; i< 8; i++) {
-                var colonne = document.createElement("td");
-                colonne.setAttribute("id", i+' '+j);
-                colonne.onclick = function() {checkMovement(this.getAttribute("id"));};
-                ligne.appendChild(colonne);
+                var laCase = document.createElement("td");
+                laCase.setAttribute("id", i+' '+j);
+                laCase.onclick = function() {checkMovement(this.getAttribute("id"));};
+                if((i+j)%2==1) {
+                    laCase.style.backgroundColor="black";    
+                }
+                ligne.appendChild(laCase);
             }
             var h2 = document.createElement("th");
             h2.innerHTML = j+1;
@@ -87,36 +76,72 @@ td {
         }
         var echiquier = document.getElementById("echiquier");
         echiquier.appendChild(table);
-        document.getElementById(positionCheval).style.backgroundColor = "red";
+        document.getElementById(positionCheval).style.backgroundImage = 'url("cheval.png")';
     }
 
+    //Fonctions de mouvement
+    function checkMovement(idcaseAller) {
+        var xa = parseInt(idcaseAller.split(" ")[0]);
+        var ya = parseInt(idcaseAller.split(" ")[1]);
+        var xc = parseInt(positionCheval.split(" ")[0]);
+        var yc = parseInt(positionCheval.split(" ")[1]);
+
+        if(Math.abs(xc-xa)<=2 && Math.abs(yc-ya)<=2) {
+            if(Math.abs(xc-xa) + Math.abs(yc-ya) == 3) {
+                listePositions.push(positionCheval);
+                positionCheval = idcaseAller;
+                majJournal();
+                majAffichage()
+
+            }
+        }
+    }
+
+    function back() {
+        if(listePositions.length!=0) {
+            var idCase = listePositions.pop();
+            document.getElementById(positionCheval).style.backgroundImage = 'none';
+            positionCheval = idCase;
+            majJournal();
+            majAffichage();
+        }
+        
+
+    }
+
+    //Fonctions d'affichage et de mise à jour
     function majJournalCoords() {
         document.getElementById("coords").innerHTML += "Coordonées du cheval : " + miseEnFormePosition() + "<br/>";
     }
-
     function miseEnFormePosition() {
         var x = parseInt(positionCheval.split(" ")[0]);
         var y = parseInt(positionCheval.split(" ")[1])+1;
         convertX = String.fromCharCode(65+x);
-
         return convertX + ' ' + y;
     }
-
     function majJournalNbCases() {
-        var nbc = parseInt(document.getElementById("nbCasesParcourues").innerHTML);
-        document.getElementById("nbCasesParcourues").innerHTML = nbc+1;
+        document.getElementById("nbCasesParcourues").innerHTML = listePositions.length;
     }
-
     function majJournal() {
         majJournalCoords();
         majJournalNbCases();
     }
 
+    function majAffichage() {
+        for (var i=0; i<listePositions.length;i++) {
+            document.getElementById(listePositions[i]).style.backgroundImage = 'url("cheval-t.png")';
+            document.getElementById(listePositions[i]).style.border = '1px solid black';
+        }
+        document.getElementById(positionCheval).style.backgroundImage = 'url("cheval.png")';
+        document.getElementById(positionCheval).style.border = '2px solid red';
+
+    }
 </script>
 
 <body onLoad="init()">
 </body>
     <div id="container">
+        <input type="button" value="Retourner en arrière" id="back" onclick="back();"/>
         <div id="echiquier">
         </div>
         <div id="journal">
